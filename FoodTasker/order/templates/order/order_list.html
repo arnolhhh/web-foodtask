@@ -1,0 +1,81 @@
+{% extends 'base/base.html' %} 
+ 
+{% block page_content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-blue">
+            <h4 class="card-title text-center text-white">ORDERS</h4>
+        </div>
+        <div class="card-body">            
+            <table 
+            id="table"
+            data-toggle="table"
+            data-pagination="true"
+            data-search="true"
+            data-show-columns="true"
+            data-show-toggle="true"
+            data-show-fullscreen="true"
+            data-toolbar=".buttons-toolbar"
+            data-locale="es-NI"
+            >
+                <thead class = "bg-gray text-white">                 
+                    <th data-sortable="true" data-field="id">No.</th>        
+                    <th data-sortable="true" data-field="order_details">Order Details</th>
+                    <th data-sortable="true" data-field="Customer">Customer</th>
+                    <th data-field="Driver">Driver</th>
+                    <th data-field="Total">Total</th>
+                    <th data-field="Status">Status</th>
+                    <th class="all">Acciones</th>                 
+                </thead>
+                <tbody>
+                {% for item in orders %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>
+                    {% for od in item.order_details.all %}
+                        {{od.meal.name}}{{od.meal.price}}x{{od.quantity}}=${{od.sub_total}}
+                    {% endfor %}
+                    </td>
+                    <td>{{ item.customer }}</td>
+                    <td>{{ item.driver }}</td>
+                    <td>{{ item.total}}</td>
+                    <td>{{ item.get_status_display}}</td> 
+                    <td>
+                    <a href="{% url 'meal:meal-edit' item.id %}" class="btn btn-warning btn-circle">
+                        <i class="far fa-edit"></i>
+                    </a>
+
+                    {% if item.status == 1 %}
+                        <form class="user" method="POST">
+                            {% csrf_token %}
+                            <input type='hidden'name='id' value='{{item.id}}'/>                           
+                            <button type="submit" class="btn btn-success">Ready</button> 
+                        </form>
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            
+            </table>
+
+        </div>            
+    </div>
+</div>
+{% endblock %}
+
+{% block js_page %} 
+<script>
+$(document).ready(function(){
+    //BUTTON NUEVO
+    var content= $('.bs-bars.float-left')
+    var link='<a href="{% url 'meal:meal-create' %}" class="btn btn-pink"><i class="far fa-calendar-plus"></i> Nuevo</a>';
+    content.html(link); 
+
+})
+   
+
+</script>
+{% endblock %}
+
+ 

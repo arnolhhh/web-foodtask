@@ -1,0 +1,197 @@
+ {% load static %}
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>SB Admin 2 - Blank</title>
+ 
+  
+  <!-- Custom bootstrap for this template-->
+  <link href="{% static  'base/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+
+  <!-- Custom fonts for this template-->
+  <link href="{% static  'base/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  
+   <!-- Custom styles for this page -->
+   <link href="{% static 'base/vendor/datatables/dataTables.bootstrap4.min.css'%}" rel="stylesheet">
+  
+<!-- Bootstrap table -->
+<link rel="stylesheet" href="{% static 'base/vendor/bootstrap-table/css/bootstrap-table.min.css' %}">
+
+<!-- Custom style for this template-->
+<link href="{% static  'base/css/style.css' %}" rel="stylesheet" type="text/css">
+ 
+ <script src="{% static '/base/vendor/chart/Chart.min.js' %}"></script>
+  
+</head>
+
+<body>
+  <div class="container-fluid"> 
+    <div class="row">
+      {% block side_bar %} 
+      <div class="col-lg-2 col-md-2 col-sm-2 sidebar">
+        <!-- Nav Item - Utilities Collapse Menu -->
+        
+          <div class="text-center">
+            <img class="rounded-circle" src="{{request.user.restaurant.logo.url}}" width="70" height="70"/>
+            <br><br>
+            <h4>{{request.user.restaurant.name}}</h4>
+            <h5>{{request.user.get_full_name}}</h5>             
+          </div>
+          <div class="list-group">
+            <span class="text-uppercase">Dashboard</span>
+              <a href="{% url 'order:order-list' %}" class="list-group-item {% if request.path == '/order/' %}active{% endif %}">Orders <span class="badge"></span></a>
+              <a href="{% url 'meal:meal-list' %}" class="list-group-item {% if request.path == '/meal/' %}active{% endif %}">Meal</a>
+              <a href="{% url 'restaurant:restaurant-reports'%}" class="list-group-item {% if request.path == '/restaurant/reports' %}active{% endif %}">Reports</a>
+            <span class="text-uppercase">Profile</span>
+              <a href="{% url 'restaurant:restaurant-account' %}" class="list-group-item">Account</a>
+          </div>
+          <div class="text-center">         
+            <a href="{% url 'app:logout' %}" class="btn btn-pink">Logout</a>
+          </div> 
+        
+        <!-- End of Sidebar -->
+      </div>
+      {% endblock side_bar %}
+      <div class="col-lg-10  col-md-10  col-sm-10 ml-md-auto content">
+          {% block top_bar %}
+          <!-- Topbar -->        
+          {% endblock top_bar %}
+
+          {% block page_content %}
+
+            <!-- Page Heading -->
+            <h1 class="h3 mb-4 text-gray-800">Blank Page</h1> 
+            
+          {% endblock page_content %}
+      </div>
+    </div>
+    <!-- End of row -->
+  </div>
+    
+  <!-- Footer -->
+  {% block footer %}
+  <footer class="sticky-footer">
+    <div class="container my-auto">
+      <div class="copyright text-center my-auto">
+        <span>Copyright &copy; Your Website 2019</span>
+      </div>
+    </div>
+  </footer>
+  {% endblock footer %}
+  <!-- End of Footer -->
+
+    
+  <!-- End of Page Wrapper -->
+  {% block login %} {% endblock %}
+  
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="#">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="popup"></div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="{% static  'base/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static  'base/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+ 
+  
+  <script src="{% static 'base/vendor/jquery_confirm/jquery-confirm.min.js' %}"></script> 
+  
+  <script src="{% static 'base/vendor/bootstrap-table/js/bootstrap-table.min.js' %}"></script>
+  <script src="{% static 'base/vendor/bootstrap-table/js/bootstrap-table-locale-all.min.js' %}"></script>
+  
+ 
+
+  {% block control_modal%}
+  <script>
+    function abrir_modal(url)
+    {
+
+      $("#popup").load(url, function(){
+        $(this).modal({
+          backdrop:'static',
+          keyboard: false
+        })
+        $(this).modal('show');
+      });
+      return false;
+    }
+
+    function cerrar_modal()
+    {
+      $('#popup').modal('hide');
+      return false;
+    }
+
+    function mensaje(msg,color='green')
+    {
+      if (color=="success")
+      {
+        color="green";
+      }
+      if (color=="error")
+      {
+        color="red";
+      }
+
+
+      $.alert({
+        title:'',
+        theme:'material',
+        type:color,
+        content:msg
+      });
+    }
+
+    {% if messages %}
+      {% for message in messages %}
+        console.log("{{ message.tags }}");
+        mensaje("{{ message }}","{{ message.tags }}");
+      {% endfor %}
+    {% endif %}
+
+    //NOTIFICACION ORDERS
+    var now = new Date();    
+    setInterval(function() {
+        $.ajax({
+            url: '/api/order/notification/' + now.toISOString() + '',
+            method: 'GET',
+            success: function(data) {
+                if (data['notification'] === 0) {
+                    $('.badge').text('0');
+                } else {
+                    $('.badge').text(data['notification']);
+                }
+            }
+        })
+    }, 3000)
+
+  </script>
+  {% endblock%}
+  {% block js_page %} {% endblock %}
+</body>
+
+</html>

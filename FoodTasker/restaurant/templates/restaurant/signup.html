@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+{% load bootstrap4 %}
+{% block side_bar %}{% endblock %} 
+{% block top_bar %}{% endblock %}
+{% block page_content %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block login %}
+ 
+
+    <div class="container">
+
+
+        <form class="user" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="card">
+            <div class="card-header bg-blue">
+                <h4 class="card-title text-center text-white">REGISTRARSE</h4>
+            </div>
+            <div class="card-body">
+                {% bootstrap_form user_form %}
+                 {% bootstrap_form restaurant_form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-pink pull-right">Submit</button>
+                {% endbuttons %}                
+            </div>            
+        </div>                   
+         
+
+        </form>
+
+    </div>
+{% endblock %}

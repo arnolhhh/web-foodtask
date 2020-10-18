@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %} 
+ 
+{% block page_content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-blue">
+            <h4 class="card-title text-center text-white">CUSTOMERS</h4>
+        </div>
+        <div class="card-body">            
+            <table 
+            id="table"
+            data-toggle="table"
+            data-pagination="true"
+            data-search="true"
+            data-show-columns="true"
+            data-show-toggle="true"
+            data-show-fullscreen="true"
+            data-toolbar=".buttons-toolbar"
+            data-locale="es-NI"
+            >
+                <thead class = "bg-gray text-white">                 
+                    <th data-sortable="true" data-field="id">No.</th>        
+                    <th data-field="avatar">Avatar</th>
+                    <th data-sortable="true" data-field="Name">Name</th>
+                    <th data-field="Address">Address</th>
+                    <th data-field="Orders">Orders</th>             
+                </thead>
+                <tbody>
+                {% for item in all_customers  %}
+                <tr>
+                    <td>{{ item.id }}</td>                    
+                     <td class="text-center">
+                        <img class="img-rounded" src="{{ item.avatar.url }}" width="50" height="50">
+                    </td>
+                    <td>{{ item.user }}</td>
+                    <td>{{ item.address}}</td>
+                    <td>{{ item.total_order}}</td>                      
+                </tr>
+                {% endfor %}
+                </tbody>
+            
+            </table>
+
+        </div>            
+    </div>
+</div>
+{% endblock %}
+
+{% block js_page %} 
+<script>
+$(document).ready(function(){
+    //BUTTON NUEVO
+    var content= $('.bs-bars.float-left')
+    var link='<a href="{% url 'meal:meal-create' %}" class="btn btn-pink"><i class="far fa-calendar-plus"></i> Nuevo</a>';
+    content.html(link);     
+})
+   
+
+</script>
+{% endblock %}
+
+ 

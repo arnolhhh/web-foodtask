@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+{% load bootstrap4 %}
+{% block side_bar %}{% endblock %} 
+{% block top_bar %}{% endblock %}
+{% block page_content %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block login %}
+    <div class="container">
+
+
+        <form class="user" method="POST">
+        {% csrf_token %}
+
+        <div class="card">
+            <div class="card-header bg-blue">
+                <h4 class="card-title text-center text-white">Login</h4>
+            </div>
+            <div class="card-body">
+                {% bootstrap_form form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-pink pull-right">Submit</button>
+                {% endbuttons %}                
+            </div>            
+        </div>                   
+         
+
+        </form>
+
+    </div>
+{% endblock %}
+
+{% block js_page %}
+<script>
+  {% if form.errors %}
+      {% for field in form %}
+          {% if field.errors %}
+              {% for error in field.errors %}
+                mensaje('{{ error|escape }}','red');
+              {% endfor %}
+          {% endif %}
+      {% endfor %}
+  
+      {% if form.non_field_errors%}
+          {% for error in form.non_field_errors %}
+            mensaje('{{ error|escape }}','red');
+          {% endfor %}
+      {% endif %}
+  {% endif %}
+</script>
+{% endblock %}

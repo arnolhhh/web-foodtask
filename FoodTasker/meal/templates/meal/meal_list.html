@@ -1,0 +1,66 @@
+{% extends 'base/base.html' %} 
+ 
+{% block page_content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-blue">
+            <h4 class="card-title text-center text-white">MEALS</h4>
+        </div>
+        <div class="card-body">            
+            <table 
+            id="table"
+            data-toggle="table"
+            data-pagination="true"
+            data-search="true"
+            data-show-columns="true"
+            data-show-toggle="true"
+            data-show-fullscreen="true"
+            data-toolbar=".buttons-toolbar"
+            data-locale="es-NI"
+            >
+                <thead class = "bg-gray text-white">                 
+                    <th data-sortable="true" data-field="id">No.</th>        
+                    <th data-sortable="true" data-field="nombres">Nombre</th>
+                    <th data-sortable="true" data-field="apellidos">Descripción</th>
+                    <th data-field="precio">Precio</th>
+                    <th data-field="image">Imagen</th>
+                    <th class="all">Acciones</th>                 
+                </thead>
+                <tbody>
+                {% for item in meals%}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.short_description }}</td>
+                    <td>{{ item.price }}</td>
+                    <td class='text-center'><img class="rounded" src="{{ item.image.url}}" width="50" height="50"/></td> 
+                    <td>
+                    <a href="{% url 'meal:meal-edit' item.id %}" class="btn btn-warning btn-circle">
+                        <i class="far fa-edit"></i>
+                    </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            
+            </table>
+
+        </div>            
+    </div>
+</div>
+{% endblock %}
+
+{% block js_page %} 
+<script>
+$(document).ready(function(){
+    var content= $('.bs-bars.float-left')
+    var link='<a href="{% url 'meal:meal-create' %}" class="btn btn-pink"><i class="far fa-calendar-plus"></i> Nuevo</a>';
+    content.html(link); 
+    
+})
+   
+
+</script>
+{% endblock %}
+
+ 
